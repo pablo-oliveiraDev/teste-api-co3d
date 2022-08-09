@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 app.post('/user', async (req, res) => {
+
     const data = req.body;
     await Usuario.add(data);
     try {
@@ -23,6 +24,7 @@ app.post('/user', async (req, res) => {
 });
 
 app.get('/user', async (req, res) => {
+
     const snapshot = await Usuario.get();
     const usuarios = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     try {
@@ -35,6 +37,7 @@ app.get('/user', async (req, res) => {
 
 
 app.get('/user/:id', async (req, res) => {
+
     const id = req.params.id;
     const snapshot = await Usuario.get();
     const usuarios = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -45,7 +48,8 @@ app.get('/user/:id', async (req, res) => {
     });
     res.send(usuario);
 });
-app.put('user/:id', async (req, res) => {
+app.put('/user/:id', async (req, res) => {
+
     const id = req.params.id;
     await Usuario.doc(id).update(req.body);
 
@@ -53,15 +57,17 @@ app.put('user/:id', async (req, res) => {
 });
 
 app.delete('/user/:id', async (req, res) => {
+
     const id = req.params.id;
     await Usuario.doc(id).delete();
 
-    res.send({ msg: "Usuário delestado com sucesso!" })
+    res.send({ msg: "Usuário deletado com sucesso!" })
 });
 
-
+//-----------------------------livros--------------------------------
 
 app.post('/livros', async (req, res) => {
+
     const data = req.body;
     await Livro.add(data);
     try {
@@ -73,8 +79,8 @@ app.post('/livros', async (req, res) => {
 
 
 app.get('/livros', async (req, res) => {
-    const snap = await Livro.get();
 
+    const snap = await Livro.get();
     const livros = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
     try {
@@ -82,7 +88,37 @@ app.get('/livros', async (req, res) => {
     } catch (error) {
         res.send(error);
     }
-    
+
+});
+
+app.get('/livros/:id', async (req, res) => {
+
+    const id = req.params.id;
+    const snapshot = await Livro.get();
+    const livros = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+    const livro = livros.filter((u) => {
+        return u.id == id;
+
+    });
+    res.send(livro);
+});
+
+app.put('/livros/:id', async (req, res) => {
+
+    const id = req.params.id;
+    await Livro.doc(id).update(req.body);
+
+    res.send({ msg: "Livro atualizado com sucesso!" });
+});
+
+app.delete('/livros/:id', async (req, res) => {
+
+    const id = req.params.id;
+    await Livro.doc(id).delete();
+    res.send({ msg: "Livro deletado com sucesso!" });
+
+
 });
 
 app.listen(5050, () => {
